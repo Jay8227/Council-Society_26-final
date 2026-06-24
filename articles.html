@@ -122,7 +122,7 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/articles-data.js"></script>
 <script>
-  // Featured banner
+  // Featured banner — only show the FIRST featured article
   var featured = ARTICLES.filter(function(a){ return a.featured; })[0];
   if(featured){
     document.getElementById('featured-banner').innerHTML =
@@ -138,14 +138,42 @@
   }
 
   var activeFilter = 'all';
+  var featuredId = featured ? featured.id : null;
 
   function renderArticles(){
-    var filtered = activeFilter === 'all' ? ARTICLES : ARTICLES.filter(function(a){ return a.category === activeFilter; });
+    // When filter = all, exclude the featured article from the grid (it's shown in the banner)
+    var pool = activeFilter === 'all'
+      ? ARTICLES.filter(function(a){ return a.id !== featuredId; })
+      : ARTICLES.filter(function(a){ return a.category === activeFilter; });
+
     var grid = document.getElementById('article-grid');
     var noRes = document.getElementById('no-results');
-    if(!filtered.length){ grid.innerHTML=''; noRes.style.display=''; return; }
-    noRes.style.display='none';
-    grid.innerHTML = filtered.map(function(a){
+    var gridSection = grid.closest('section') || grid.parentElement;
+
+    if(!pool.length){
+      grid.innerHTML = '';
+      grid.style.display = 'none';
+      noRes.style.display = activeFilter !== 'all' ? '' : 'none';
+      return;
+    }
+
+    noRes.style.display = 'none';
+    grid.style.display = '';
+
+    // Adapt columns to how many articles we actually have
+    var count = pool.length;
+    if(count === 1){
+      grid.style.gridTemplateColumns = '1fr';
+      grid.style.maxWidth = '480px';
+    } else if(count === 2){
+      grid.style.gridTemplateColumns = 'repeat(2,1fr)';
+      grid.style.maxWidth = '';
+    } else {
+      grid.style.gridTemplateColumns = '';
+      grid.style.maxWidth = '';
+    }
+
+    grid.innerHTML = pool.map(function(a){
       return '<a href="article.html?id='+a.id+'" class="article-card reveal">'+
         '<div class="article-card-body">'+
           '<span class="tag tag-'+a.tagClass+'">'+a.category+'</span>'+
@@ -155,7 +183,8 @@
         '</div>'+
       '</a>';
     }).join('');
-    // trigger reveal for newly added elements
+
+    // Trigger reveal animations for newly rendered cards
     document.querySelectorAll('.reveal:not(.in)').forEach(function(el){
       setTimeout(function(){ el.classList.add('in'); }, 50);
     });
