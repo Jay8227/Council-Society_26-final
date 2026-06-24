@@ -1,19 +1,32 @@
 /* Council Society 2026 — shared site behavior */
 
 (function(){
-  /* ---- mobile nav ---- */
+  /* ---- mobile nav ----
+     FIX: The .main-nav lives inside .site-header which has backdrop-filter.
+     In WebKit (iOS Safari / Android Chrome), backdrop-filter creates a stacking
+     context that breaks position:fixed on descendants, causing the nav to appear
+     as a narrow partial panel instead of full-screen.
+     SOLUTION: Move the nav element to be a direct child of <body> before wiring events.
+  ---- */
   var toggle = document.querySelector('.nav-toggle');
-  var nav = document.querySelector('.main-nav');
+  var nav    = document.querySelector('.main-nav');
+  var siteHeader = document.querySelector('.site-header');
 
-  // Create backdrop for tap-outside-to-close on mobile
+  // Portal the nav out of the header so it isn't clipped by backdrop-filter
+  if(nav && siteHeader && siteHeader.contains(nav)){
+    document.body.insertBefore(nav, siteHeader.nextSibling);
+  }
+
+  // Create backdrop for tap-outside-to-close
   var backdrop = document.createElement('div');
   backdrop.className = 'nav-backdrop';
   document.body.appendChild(backdrop);
 
   function closeNav(){
+    if(!nav) return;
     nav.classList.remove('open');
-    toggle.classList.remove('is-open');
-    toggle.setAttribute('aria-expanded', 'false');
+    if(toggle) toggle.classList.remove('is-open');
+    if(toggle) toggle.setAttribute('aria-expanded', 'false');
     backdrop.classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -26,13 +39,10 @@
       backdrop.classList.toggle('active', open);
       document.body.style.overflow = open ? 'hidden' : '';
     });
-    // Close when a nav link is tapped
     nav.querySelectorAll('a').forEach(function(a){
       a.addEventListener('click', closeNav);
     });
-    // Close when tapping the backdrop
     backdrop.addEventListener('click', closeNav);
-    // Close on Escape key
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape' && nav.classList.contains('open')) closeNav();
     });
@@ -46,27 +56,46 @@
   });
 
   /* ---- scroll reveal ---- */
+  var io = null;
   var revealEls = document.querySelectorAll('.reveal');
-  if('IntersectionObserver' in window && revealEls.length){
-    var io = new IntersectionObserver(function(entries){
+
+  function makeObserver(){
+    if(!('IntersectionObserver' in window)) return null;
+    return new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
       });
-    }, { threshold:.12, rootMargin:'0px 0px -40px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  }
+
+  if('IntersectionObserver' in window && revealEls.length){
+    io = makeObserver();
     revealEls.forEach(function(el){ io.observe(el); });
   } else {
     revealEls.forEach(function(el){ el.classList.add('in'); });
   }
 
+  /* Global helper — call this after dynamically inserting .reveal elements
+     so they get registered with the intersection observer.
+     Usage:  window.observeReveal(container.querySelectorAll('.reveal'));  */
+  window.observeReveal = function(els){
+    if(!els || !els.length) return;
+    if(io){
+      els.forEach(function(el){ if(!el.classList.contains('in')) io.observe(el); });
+    } else {
+      els.forEach(function(el){ el.classList.add('in'); });
+    }
+  };
+
   /* ---- footer year ---- */
   document.querySelectorAll('.js-year').forEach(function(el){ el.textContent = new Date().getFullYear(); });
 
-  /* ---- sticky header shrink shadow on scroll ---- */
+  /* ---- sticky header shadow on scroll ---- */
   var header = document.querySelector('.site-header');
   if(header){
     window.addEventListener('scroll', function(){
       header.style.boxShadow = window.scrollY > 8 ? 'var(--shadow-sm)' : 'none';
-    }, { passive:true });
+    }, { passive: true });
   }
 })();
 

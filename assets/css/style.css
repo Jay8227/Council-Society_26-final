@@ -720,21 +720,33 @@ mark{ background:var(--gold-300); color:var(--ink-900); padding:0 2px; border-ra
 }
 
 /* ---- All inline two-column grids (index, about, join, contact, social) ---- */
-/* These target the divs where display:grid and grid-template-columns:*fr *fr
-   are set as inline styles. We use a broad selector on .wrap children. */
+/* Covers BOTH cases:
+   (a) The .wrap itself has an inline grid style  → .wrap[style*=]
+   (b) A child of .wrap has the inline grid style → .wrap > [style*=]         */
 @media (max-width: 760px) {
 
-  /* Index: Mission/Vision 1fr 1fr */
-  /* About: The Problem .9fr 1.1fr, Long-term Goals 1fr 1fr */
-  /* Join: Mentor CTA 1fr 1fr */
-  /* Contact: contact form layout 1fr 1fr */
-  /* We target any direct grid child inside .wrap that has two columns */
+  /* Case (a): .wrap or .wrap-narrow is the grid container */
+  .wrap[style*="grid-template-columns"],
+  .wrap-narrow[style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 36px !important;
+  }
+
+  /* Case (b): a div/element inside .wrap is the grid container */
   .wrap > [style*="grid-template-columns"],
   .wrap > div > [style*="grid-template-columns"],
   .wrap-narrow > [style*="grid-template-columns"] {
     display: flex !important;
     flex-direction: column !important;
     gap: 36px !important;
+  }
+
+  /* Sections that have an inline grid directly on them */
+  section > .wrap[style*="grid-template-columns"],
+  section[style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   /* Fix section-head that uses flex justify-content:space-between */
