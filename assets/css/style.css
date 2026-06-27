@@ -612,7 +612,7 @@ mark{ background:var(--gold-300); color:var(--ink-900); padding:0 2px; border-ra
 /* ==========================================================================
    ARTICLES LIST PAGE
    ========================================================================== */
-.articles-hero { padding: 140px 0 60px; }
+.articles-hero { padding: 70px 0 60px; }
 
 /* ==========================================================================
    ARTICLE DETAIL ADDITIONS
