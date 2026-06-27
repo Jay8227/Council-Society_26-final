@@ -135,7 +135,9 @@ p{ margin:0; }
   border-bottom:1px solid var(--line);
 }
 .site-header .wrap{
-  display:flex; align-items:center; justify-content:space-between;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
   height:78px;
 }
 .brand{ display:flex; align-items:center; gap:12px; }
