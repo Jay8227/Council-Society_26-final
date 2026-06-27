@@ -163,6 +163,7 @@ p{ margin:0; }
 
 .nav-toggle{
   display:none; background:none; border:none; padding:8px; flex-direction:column; gap:5px;
+  grid-column:3; justify-self:end;
 }
 .nav-toggle span{ width:24px; height:2px; background:var(--navy-900); display:block; transition:.25s; }
 
@@ -238,7 +239,7 @@ p{ margin:0; }
 .page-hero{
   background:radial-gradient(120% 140% at 15% -10%, var(--navy-800) 0%, var(--navy-950) 60%);
   color:var(--white);
-  padding:170px 0 80px;
+  padding:85px 0 80px;
   position:relative;
   overflow:hidden;
 }
@@ -693,7 +694,7 @@ mark{ background:var(--gold-300); color:var(--ink-900); padding:0 2px; border-ra
 /* ---- Page Hero: reduce top padding on mobile ---- */
 @media (max-width: 760px) {
   .page-hero {
-    padding: 110px 0 56px;
+    padding: 55px 0 56px;
   }
   .page-hero p.lede {
     font-size: 16px;
