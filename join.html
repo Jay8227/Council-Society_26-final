@@ -119,7 +119,9 @@
         <p style="color:rgba(255,255,255,.65); margin-top:12px;">We read every application personally. Expect a response within 7 days.</p>
       </div>
 
-      <form id="join-form" novalidate>
+      <form id="join-form" action="https://formsubmit.co/councilsociety2026@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="New Application for Council Society 2026">
+        <input type="hidden" name="_captcha" value="false">
         <div class="form-row">
           <div class="field">
             <label for="f-name">Full Name</label>
@@ -250,36 +252,7 @@
     });
   });
 
-  // Form submission — sends via mailto to councilsociety2026@gmail.com
-  var form = document.getElementById('join-form');
-  var toast = document.getElementById('toast');
-  if(form){
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var name    = document.getElementById('f-name').value.trim();
-      var email   = document.getElementById('f-email').value.trim();
-      var country = document.getElementById('f-country').value.trim();
-      var role    = document.getElementById('f-role').value.trim();
-      var track   = document.getElementById('f-track').value || 'Not specified';
-      var domain  = document.getElementById('f-domain').value || 'Not specified';
-      var message = document.getElementById('f-message').value.trim();
-      var body =
-        'Name: ' + name + '\n' +
-        'Email: ' + email + '\n' +
-        'Country: ' + country + '\n' +
-        'Current Role: ' + role + '\n' +
-        'Involvement Track: ' + track + '\n' +
-        'Domain of Interest: ' + domain + '\n\n' +
-        'Why they want to join:\n' + message;
-      var mailto = 'mailto:councilsociety2026@gmail.com'
-        + '?subject=' + encodeURIComponent('[Council Society] Application — ' + name)
-        + '&body='    + encodeURIComponent(body);
-      window.location.href = mailto;
-      toast.classList.add('show');
-      form.reset();
-      setTimeout(function(){ toast.classList.remove('show'); }, 4000);
-    });
-  }
+  // FormSubmit handles the submission natively via HTML POST action.
 </script>
 </body>
 </html>

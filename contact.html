@@ -104,19 +104,20 @@
       <div class="reveal">
         <div style="background:var(--navy-950); border-radius:var(--radius-lg); padding:36px;">
           <h3 style="color:var(--white); font-size:22px; margin-bottom:24px;">Send a message</h3>
-          <form id="contact-form" novalidate style="display:flex; flex-direction:column; gap:18px;">
+          <form id="contact-form" action="https://formsubmit.co/councilsociety2026@gmail.com" method="POST" class="form-grid">
+            <input type="hidden" name="_subject" value="New Message from Council Society Contact Form">
+            <input type="hidden" name="_captcha" value="false">
             <div class="field">
-              <label for="c-name">Full Name</label>
+              <label for="c-name">Name</label>
               <input type="text" id="c-name" name="name" placeholder="Your name" required>
             </div>
             <div class="field">
               <label for="c-email">Email</label>
-              <input type="email" id="c-email" name="email" placeholder="you@example.com" required>
+              <input type="email" id="c-email" name="email" placeholder="Your email address" required>
             </div>
-            <div class="field">
+            <div class="field field-full">
               <label for="c-subject">Subject</label>
-              <select id="c-subject" name="subject">
-                <option value="">Choose a topic…</option>
+              <select id="c-subject" name="Subject">
                 <option>General inquiry</option>
                 <option>Joining / membership</option>
                 <option>Press &amp; media</option>
@@ -126,7 +127,7 @@
                 <option>Other</option>
               </select>
             </div>
-            <div class="field">
+            <div class="field field-full">
               <label for="c-message">Message</label>
               <textarea id="c-message" name="message" placeholder="What would you like to discuss?" rows="5" required></textarea>
             </div>
@@ -288,26 +289,7 @@
     });
   });
 
-  // Contact form — sends via mailto to councilsociety2026@gmail.com
-  var cForm = document.getElementById('contact-form');
-  var toast = document.getElementById('toast');
-  if(cForm){
-    cForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      var name    = document.getElementById('c-name').value.trim();
-      var email   = document.getElementById('c-email').value.trim();
-      var subject = document.getElementById('c-subject').value || 'General inquiry';
-      var message = document.getElementById('c-message').value.trim();
-      var body = 'From: ' + name + ' (' + email + ')\n\n' + message;
-      var mailto = 'mailto:councilsociety2026@gmail.com'
-        + '?subject=' + encodeURIComponent('[Council Society] ' + subject)
-        + '&body='    + encodeURIComponent(body);
-      window.location.href = mailto;
-      toast.classList.add('show');
-      cForm.reset();
-      setTimeout(function(){ toast.classList.remove('show'); }, 4500);
-    });
-  }
+  // FormSubmit handles the submission natively via HTML POST action.
 </script>
 </body>
 </html>
